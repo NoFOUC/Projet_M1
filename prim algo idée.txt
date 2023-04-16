@@ -1,0 +1,3 @@
+prim algo avec fibonnaci heap
+
+mais faire prim avec le radix heap peut etre interessant
