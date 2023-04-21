@@ -5,6 +5,8 @@ import time
 start_time = time.time()
 
 usa = False
+
+#choose the parameters of the graph
 G = graph_generation_np_array.graph_generation(nbr_node=25000, color=False, usa=True)
 
 #G= m2g.map_to_graph_from_point([35.7521, 139.8781, 3000], plot=True)
