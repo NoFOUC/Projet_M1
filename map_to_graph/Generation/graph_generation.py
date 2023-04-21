@@ -4,7 +4,6 @@ from typing import Annotated, List, Tuple
 
 import networkx as nx
 import numpy as np
-import more_itertools as mit
 from matplotlib import pyplot as plt
 
 
