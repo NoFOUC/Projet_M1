@@ -1,5 +1,5 @@
 import map_to_graph as m2g
-from Generation import graph_generation, graph_generation_np_array
+from Generation import graph_generation_np_array
 from plot_generation import plot_generation_ratio
 import time
 start_time = time.time()
@@ -7,7 +7,7 @@ start_time = time.time()
 usa = False
 
 #choose the parameters of the graph
-G = graph_generation_np_array.graph_generation(nbr_node=25000, color=False, usa=True)
+G = graph_generation_np_array.graph_generation(color=False)
 
 #G= m2g.map_to_graph_from_point([35.7521, 139.8781, 3000], plot=True)
 

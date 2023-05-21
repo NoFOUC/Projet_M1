@@ -288,10 +288,11 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
         |Z| |A|
         """
         if k == "up-left":
-            if tab_adj[position_in_adj(possible_position["up"], side)][
-                position_in_adj(possible_position["left"], side)] == 1:
-                possible_position[k] = False
-                poss_pos.remove(k)
+            if possible_position["up"] and possible_position["left"]:
+                if tab_adj[position_in_adj(possible_position["up"], side)][
+                    position_in_adj(possible_position["left"], side)] == 1:
+                    possible_position[k] = False
+                    poss_pos.remove(k)
 
         """
         If the possible position of the second node of the edge is (i-1,j+1), check if there is already
@@ -304,10 +305,11 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
         """
 
         if k == "up-right":
-            if tab_adj[position_in_adj(possible_position["up"], side)][
-                position_in_adj(possible_position["right"], side)] == 1:
-                possible_position[k] = False
-                poss_pos.remove(k)
+            if possible_position["up"] and possible_position["right"]:
+                if tab_adj[position_in_adj(possible_position["up"], side)][
+                    position_in_adj(possible_position["right"], side)] == 1:
+                    possible_position[k] = False
+                    poss_pos.remove(k)
 
         """
         If the possible position of the second node of the edge is (i-1,j+1), check if there is already
@@ -319,10 +321,11 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
         |B| |Y|
         """
         if k == "down-left":
-            if tab_adj[position_in_adj(possible_position["down"], side)][
-                position_in_adj(possible_position["left"], side)] == 1:
-                possible_position[k] = False
-                poss_pos.remove(k)
+            if possible_position["down"] and possible_position["left"]:
+                if tab_adj[position_in_adj(possible_position["down"], side)][
+                    position_in_adj(possible_position["left"], side)] == 1:
+                    possible_position[k] = False
+                    poss_pos.remove(k)
 
         """
         If the possible position of the second node of the edge is (i+1,j+1), check if there is already
@@ -334,10 +337,11 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
         |Y| |B|
         """
         if k == "down-right":
-            if tab_adj[position_in_adj(possible_position["down"], side)][
-                position_in_adj(possible_position["right"], side)] == 1:
-                possible_position[k] = False
-                poss_pos.remove(k)
+            if possible_position["down"] and possible_position["right"]:
+                if tab_adj[position_in_adj(possible_position["down"], side)][
+                    position_in_adj(possible_position["right"], side)] == 1:
+                    possible_position[k] = False
+                    poss_pos.remove(k)
 
     # check if parameter usa is True
     # if yes, remove the down-left and down-right possible positions with 0.9% of probability
@@ -409,25 +413,6 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
             if possible_position[k]:
                 tab_adj[position_in_adj(possible_position[k], side)][position_in_adj([i, j], side)] = 1
                 tab_adj[position_in_adj([i, j], side)][position_in_adj(possible_position[k], side)] = 1
-
-        ## OLD CODE
-        """temp = 0
-        for k in possible_position.keys():
-            if possible_position[k] != False:
-                if len(rand) == 0:
-                    break
-                else:
-                    if rand[0] == temp:
-                        tab_adj[position_in_adj(possible_position[k], side)][position_in_adj([i, j], side)] = 1
-                        tab_adj[position_in_adj([i, j], side)][position_in_adj(possible_position[k], side)] = 1
-
-                        temp += 1
-                        rand.pop(0)
-
-                    else:
-                        temp += 1
-        """
-
 
 def node_generation(tab_graph, side, funct_deg, pourc_2, pourc_0, usa=False):
     """
@@ -535,12 +520,7 @@ def graph_generation(nbr_node: int = 4000,
 
     print ("tab adj")
     # create the adjacency matrix
-    #tab_adj = [[0 for y in range(nbr_node)] for x in range(nbr_node)]
 
-
-    #print ("done")
-
-    #print ("test")
     global tab_adj
     tab_adj = np.zeros((nbr_node, nbr_node), int)
 
@@ -569,38 +549,6 @@ def graph_generation(nbr_node: int = 4000,
                            (pos[1] + ((np.random.rand(1)[0]/2) - 0.25)) * 10000 * noise]
 
     print ("done")
-    """
-    A FAIRE : 
-    
-    double dfs de gauche et droite pour chaque noeuds si degré = 2 , 
-    on continue jusqu'à un noeuds de degré > 2 ou = 1 
-    si les 2 sont >2 alors on relit le noeuds au noeuds à l'autre extrémité 
-    si l'un des deux = 1 alors on supprime tout le segment car c'est un chemin sans issu
-    si les 2 sont de degré 1 on supprime tout car ça veut dire que c'est une route sans issus des 2 cote donc 
-    impossible d'y entrer 
-    
-    SI on retombe sur le meme noeuds de départ, alors on à une boucle = un circuit et on supprime aussi 
-    
-    ATTENTION il faut créer des segment avec des LINESTRIGHT avec type "geometry" 
-    
-    ça pourrait aussi detecter la plus grand composante connexe 
-    
-    """
-    # ici code
-    """for i in range(nbr_node):
-        if adj_mat[i].count(1) == 2:
-
-            segment = []
-            i_1 = adj_mat[i].index(1)
-            i_2 = adj_mat[i].index(1, i_1 + 1)
-
-            adj_mat[i_1][i_2] = 1
-            adj_mat[i_2][i_1] = 1
-
-            adj_mat[i][i_1] = 0
-            adj_mat[i][i_2] = 0
-
-            print(i_1, i_2)"""
 
     print ("create graph")
     # create the graph with networkx from the adjacency matrix
@@ -655,9 +603,12 @@ def graph_generation(nbr_node: int = 4000,
 
             # else => size set to 1
             else:
-                size_map.append(1)
+
+
 
                 if color == True:
+
+                    size_map.append(1)
                     if np.count_nonzero(e==1) == 3:
 
                         color_map.append("red")
@@ -680,6 +631,10 @@ def graph_generation(nbr_node: int = 4000,
 
                     else:
                         color_map.append("blue")
+
+                else:
+
+                    size_map.append(0.2)
     print ("done")
     G.remove_nodes_from(not_in_graph)
 
