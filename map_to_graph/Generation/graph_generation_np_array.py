@@ -78,7 +78,6 @@ def position_in_adj(pos, side):
     return pos[0] * side + pos[1]
 
 
-
 def position_from_adj(pos, side):
     """
     Donne la position du nœud dans le graphe en fonction de sa position dans la matrice d'adjacence.
@@ -87,7 +86,6 @@ def position_from_adj(pos, side):
     i = (side - 1) - pos // side
     j = pos % side
     return [i, j]
-
 
 
 def get_up_left(i, j):
@@ -153,7 +151,7 @@ def get_left(i, j):
     return [i, j - 1]
 
 
-def edges_generation( i, j, side, nbr_edge=2, usa=False):
+def edges_generation(i, j, side, nbr_edge=2, usa=False):
     """
 
     Main Function to generate the graph
@@ -371,11 +369,11 @@ def edges_generation( i, j, side, nbr_edge=2, usa=False):
     # and substract the number of edges already present to the number of edges we want to add
     # if the number of edges we want to add is negative, set it to 0 (we have the number of edges we want)
     tot = nbr_edge
-    if np.count_nonzero(tab_adj[position_in_adj([i, j], side)]==1) != 0:
-        if nbr_edge - np.count_nonzero(tab_adj[position_in_adj([i, j], side)]==1) < 0:
+    if np.count_nonzero(tab_adj[position_in_adj([i, j], side)] == 1) != 0:
+        if nbr_edge - np.count_nonzero(tab_adj[position_in_adj([i, j], side)] == 1) < 0:
             nbr_edge = 0
         else:
-            nbr_edge = nbr_edge - np.count_nonzero(tab_adj[position_in_adj([i, j], side)]==1)
+            nbr_edge = nbr_edge - np.count_nonzero(tab_adj[position_in_adj([i, j], side)] == 1)
 
     # if the number of possible positions is lower than the number of edges we want to add
     # add all the possible positions to the graph
@@ -442,7 +440,7 @@ def node_generation(tab_graph, side, funct_deg, pourc_2, pourc_0, usa=False):
     for length in range(side):
         for width in range(side):
 
-            print (str(length*side+width) + "/" + str(side*side))
+            print(str(length * side + width) + "/" + str(side * side))
             random_2 = np.random.rand(1)
 
             # if the random number is lower than the pourcentage of edges with 2 degree
@@ -458,7 +456,7 @@ def node_generation(tab_graph, side, funct_deg, pourc_2, pourc_0, usa=False):
                 # follow the distribution of the degree of the nodes
                 else:
                     edges_generation(length, width, side,
-                                    nbr_edge=inverse(tab_graph[length][width], funct_deg[0], funct_deg[1]), usa=usa)
+                                     nbr_edge=inverse(tab_graph[length][width], funct_deg[0], funct_deg[1]), usa=usa)
 
 
 @dataclass
@@ -502,9 +500,12 @@ def graph_generation(nbr_node: int = 4000,
     # because we want nodes of degree 2 (fake node) and nodes of degree 0 (no node)
     # we also want to have a square graph
     """
+    if pourc_0 == 1 or pourc_2 == 1 :
+        raise ValueError ("pourc_0 or pourc_2 can't be equal to 1")
 
     # nbr of node with fake nodes and nodes of degree 0
-    nbr_node = int((nbr_node * (1 + pourc_2)) * (1 + pourc_0)) * 2
+
+    nbr_node = int(nbr_node / ((1 - pourc_0) * (1 - pourc_2)))
 
     # nbr of nodes to have a square graph
     side = int(np.sqrt(nbr_node)) + 1
@@ -512,51 +513,51 @@ def graph_generation(nbr_node: int = 4000,
     # real number of nodes in the graph
     nbr_node = side * side
 
-    print ("tab graph")
+    print("tab graph")
     # create a random tab of number between 0 and 1 to check the degree of the nodes in inverse function distribution
     tab_graph = np.random.rand(side, side)
 
-    print ("done")
+    print("done")
 
-    print ("tab adj")
+    print("tab adj")
     # create the adjacency matrix
 
     global tab_adj
     tab_adj = np.zeros((nbr_node, nbr_node), int)
 
-    print ("done")
+    print("done")
     # create the graph
 
-    print ("node gen")
+    print("node gen")
     node_generation(tab_graph, side, funct_deg=funct_deg, pourc_2=pourc_2, pourc_0=pourc_0, usa=usa)
 
-    print ("done")
+    print("done")
 
     gc.collect()
     # create the dictionary of position of the nodes for networkx
     # if usa == True => no random position
     # else add noise to the position of the nodes
 
-    print ("pos")
+    print("pos")
     dict_pos = {}
     for i in range(nbr_node):
         pos = position_from_adj(i, side)
-        print (str(i) + "/" + str(nbr_node))
+        print(str(i) + "/" + str(nbr_node))
         if usa == True and noise == 1:
             dict_pos[i] = [pos[0] * 100, pos[1] * 100]
         else:
-            dict_pos[i] = [(pos[0] + ((np.random.rand(1)[0]/2) - 0.25)) * 10000 * noise,
-                           (pos[1] + ((np.random.rand(1)[0]/2) - 0.25)) * 10000 * noise]
+            dict_pos[i] = [(pos[0] + ((np.random.rand(1)[0] / 2) - 0.25)) * 10000 * noise,
+                           (pos[1] + ((np.random.rand(1)[0] / 2) - 0.25)) * 10000 * noise]
 
-    print ("done")
+    print("done")
 
-    print ("create graph")
+    print("create graph")
     # create the graph with networkx from the adjacency matrix
     G = nx.from_numpy_array(np.array(tab_adj))
 
-    print ("done")
+    print("done")
 
-    print ("remove node 1")
+    print("remove node 1")
     for i in range(reduce_deg_1):
         for s in range(1):
             a = []
@@ -566,25 +567,17 @@ def graph_generation(nbr_node: int = 4000,
 
             G.remove_nodes_from(a)
 
-    print ("done")
+    print("done")
     # hide the fake nodes and the nodes of degree 0 from the graph with a size set to 0
     size_map = []
     color_map = []
 
-
-
     # check the bigger connected component of the graph and remove the nodes that are not in this component
-    """
-    COMPLEXITY PROBLEM HERE 
-    """
-    # a is all the nodes that are not in the biggest connected component
-    # dict_pos are all the nodes in the graph
-    # max(nx.connected_components(G), key=len) are the nodes in the biggest connected component
-    print ("calcul connected component")
+    print("calcul connected component")
 
     not_in_graph = dict_pos.keys() - max(nx.connected_components(G), key=len)
 
-    print ("done")
+    print("done")
 
     print("supp node 2 and 0")
     # for all the nodes in the graph
@@ -594,7 +587,7 @@ def graph_generation(nbr_node: int = 4000,
         if i not in not_in_graph:
 
             # if the node is a fake node or a node of degree 0 => size set to 0
-            if np.count_nonzero(e==1)==2 or np.count_nonzero(e==1)==0:
+            if np.count_nonzero(e == 1) == 2 or np.count_nonzero(e == 1) == 0:
 
                 size_map.append(0)
 
@@ -604,28 +597,26 @@ def graph_generation(nbr_node: int = 4000,
             # else => size set to 1
             else:
 
-
-
                 if color == True:
 
                     size_map.append(1)
-                    if np.count_nonzero(e==1) == 3:
+                    if np.count_nonzero(e == 1) == 3:
 
                         color_map.append("red")
 
-                    elif np.count_nonzero(e==1) == 1:
+                    elif np.count_nonzero(e == 1) == 1:
 
                         color_map.append("purple")
 
-                    elif np.count_nonzero(e==1) == 4:
+                    elif np.count_nonzero(e == 1) == 4:
 
                         color_map.append("green")
 
-                    elif np.count_nonzero(e==1) == 5:
+                    elif np.count_nonzero(e == 1) == 5:
 
                         color_map.append("yellow")
 
-                    elif np.count_nonzero(e==1) == 6:
+                    elif np.count_nonzero(e == 1) == 6:
 
                         color_map.append("orange")
 
@@ -635,7 +626,7 @@ def graph_generation(nbr_node: int = 4000,
                 else:
 
                     size_map.append(0.2)
-    print ("done")
+    print("done")
     G.remove_nodes_from(not_in_graph)
 
     if color == True:

@@ -7,8 +7,9 @@ start_time = time.time()
 usa = False
 
 #choose the parameters of the graph
-G = graph_generation_np_array.graph_generation(color=False)
+G = graph_generation_np_array.graph_generation(pourc_2=1)
 
+#plot a graph of a place in the world
 #G= m2g.map_to_graph_from_point([35.7521, 139.8781, 3000], plot=True)
 
 color = ["purple", "red", "green", "yellow", "orange", "blue"]
@@ -25,7 +26,7 @@ txt = "Graph generation with a number of nodes equal to " + str(len(degree[0])) 
 
 for e in range(1, max(tot)):
 
-    if e != 2:
+    if e != 2 and e != 1:
         txt = txt + "\nThe number of node of degree " + str(e) + " is equal to " + str(tot.count(e)) + ". " + \
               "The ratio is equal to " + str(round(tot.count(e) / len(tot), 2)) + ". "
         if e < 5:
