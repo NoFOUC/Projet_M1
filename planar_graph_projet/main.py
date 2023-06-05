@@ -1,6 +1,6 @@
-from planar_graph_projet.map_to_graph import map_to_graph as m2g
+from map_to_graph import map_to_graph as m2g
 from planar_graph_generation import graph_generation_np_array
-from planar_graph_projet.map_to_graph.plot_generation import plot_generation_ratio
+from map_to_graph.plot_generation import plot_generation_ratio
 import time
 start_time = time.time()
 
